@@ -22,6 +22,8 @@ public class GateView extends FixedPanel implements ItemListener {
     private final Gate gate;
     private final JCheckBox[] inputBoxes;
     private final Image image;
+    private final JCheckBox outputBox;
+    private final JCheckBox outputBox2;
 
     public GateView(Gate gate) {
         super(BORDER + SWITCH_SIZE + GATE_WIDTH + LIGHT_SIZE + BORDER, GATE_HEIGHT);
@@ -29,6 +31,7 @@ public class GateView extends FixedPanel implements ItemListener {
         this.gate = gate;
 
         int inputSize = gate.getInputSize();
+        int outputSize = gate.getOutputSize();
 
         switches = new Switch[inputSize];
         inputBoxes = new JCheckBox[inputSize];
@@ -39,6 +42,9 @@ public class GateView extends FixedPanel implements ItemListener {
 
             gate.connect(i, switches[i]);
         }
+        outputBox = new JCheckBox();
+        outputBox2 = new JCheckBox();
+
 
         int x, y, step;
 
@@ -50,6 +56,12 @@ public class GateView extends FixedPanel implements ItemListener {
             add(inputBox, x, y, SWITCH_SIZE, SWITCH_SIZE);
         }
 
+
+        if (outputSize == 2) {
+            add(outputBox, BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - SWITCH_SIZE) / 2 + 10, SWITCH_SIZE, SWITCH_SIZE);
+            add(outputBox2, BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - SWITCH_SIZE) / 2 - 10, SWITCH_SIZE, SWITCH_SIZE);
+        }
+
         String name = gate.toString() + ".png";
         URL url = getClass().getClassLoader().getResource(name);
         image = getToolkit().getImage(url);
@@ -57,6 +69,10 @@ public class GateView extends FixedPanel implements ItemListener {
         for (JCheckBox inputBox : inputBoxes) {
             inputBox.addItemListener(this);
         }
+
+        outputBox.setEnabled(false);
+        outputBox2.setEnabled(false);
+
 
         update();
     }
@@ -69,8 +85,15 @@ public class GateView extends FixedPanel implements ItemListener {
                 switches[i].turnOff();
             }
         }
+        boolean result = gate.read();
+        outputBox.setSelected(result);
 
-        repaint();
+        if (gate.getOutputSize()== 2){
+            boolean result2 = gate.read(1);
+            outputBox2.setSelected(result2);
+        }
+
+
     }
 
     @Override
