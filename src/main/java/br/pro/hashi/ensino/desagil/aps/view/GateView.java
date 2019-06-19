@@ -89,14 +89,24 @@ public class GateView extends FixedPanel implements ItemListener, MouseListener 
 
         g.drawImage(image, BORDER + SWITCH_SIZE, 0, GATE_WIDTH, GATE_HEIGHT, this);
 
-        if (gate.read()) {
-            g.setColor(color);
-        } else {
-            g.setColor(Color.BLACK);
-        }
-        g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, (GATE_HEIGHT - LIGHT_SIZE) / 2, LIGHT_SIZE, LIGHT_SIZE);
+        int outputSize = gate.getOutputSize();
+        int y;
+        int y2;
 
-        getToolkit().sync();
+        y = -(SWITCH_SIZE / 2) + 3;
+        y2 = (GATE_HEIGHT / (outputSize + 1));
+        for (int e = 0; e < outputSize; e++) {
+            y += y2;
+
+            if (gate.read(e)) {
+                g.setColor(Color.RED);
+            } else {
+                g.setColor(Color.BLACK);
+            }
+            g.fillOval(BORDER + SWITCH_SIZE + GATE_WIDTH, y, LIGHT_SIZE, LIGHT_SIZE);
+
+            getToolkit().sync();
+        }
     }
 
     @Override
@@ -115,8 +125,19 @@ public class GateView extends FixedPanel implements ItemListener, MouseListener 
         }
     }
 
-    @Override public void mousePressed(MouseEvent e) {}
-    @Override public void mouseReleased(MouseEvent e) {}
-    @Override public void mouseEntered(MouseEvent e) {}
-    @Override public void mouseExited(MouseEvent e) {}
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
 }
